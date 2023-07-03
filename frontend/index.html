@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login App</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <div class="instructions">
+          <p>Please enter your username and password below:</p>
+          <ul>
+            <li>Username must be alphanumeric and between 6-12 characters.</li>
+            <li>Password can contain alphabets, numbers, and special characters, and should be at least 6 characters long.</li>
+          </ul>
+        </div>
+        <div class="error-message" id="error-message"></div>
+        <form>
+          <label for="username">Username:</label>
+          <input type="text" id="username" name="username" placeholder="Enter your username">
+    
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password" placeholder="Enter your password">
+    
+          <button class="submit-button" onclick="sendData(event)" id="submit-button">Submit</button>
+        </form>
+      </div>
+  <script>
+    async function sendData(event){
+        event.preventDefault();
+        try{
+            loader(event);
+        const username = document.getElementById('username').value;
+        const password  = document.getElementById('password').value;
+        const errorMessage = document.getElementById("error-message");
+      const submitButton = document.getElementById("submit-button");
+
+      errorMessage.style.opacity = 0;
+      submitButton.disabled = true;
+
+        console.log(username,password);
+        const formdata = new FormData;
+
+        formdata.append('username',username);
+        formdata.append('password',password);
+
+
+        await fetch("http://localhost:3001/login",{
+            method : 'POST',
+            body : formdata
+        }).then((res)=>{
+            return res.json()
+        }).then((data)=>{
+            errorMessage.textContent = data.message;
+          errorMessage.style.opacity = 1;
+          submitButton.disabled = false;
+        }).catch((err)=>{
+            errorMessage.textContent = "An error occurred :"+err;
+          errorMessage.style.opacity = 1;
+          submitButton.disabled = false;
+        })
+
+
+        }
+        catch(err){
+            console.log(err);
+        }finally{
+            loaderContainer.style.display = "none";
+        }
+        
+       
+        
+    }
+  </script>
+  <script>
+    // Wait for the page to load
+    var loaderContainer = null;
+    function loader(event) {
+        // Create the loader container element
+        loaderContainer = document.createElement("div");
+        loaderContainer.setAttribute("id", "loader-container");
+        loaderContainer.style.position = "fixed";
+        loaderContainer.style.top = "0";
+        loaderContainer.style.left = "0";
+        loaderContainer.style.width = "100%";
+        loaderContainer.style.height = "100%";
+        loaderContainer.style.display = "flex";
+        loaderContainer.style.alignItems = "center";
+        loaderContainer.style.justifyContent = "center";
+        loaderContainer.style.zIndex = "9999";
+        loaderContainer.style.backdropFilter = "blur(8px)";
+        loaderContainer.style.webkitBackdropFilter = "blur(8px)";
+
+        // Create the loader element
+        var loader = document.createElement("div");
+        loader.setAttribute("id", "loader");
+        loader.style.border = "16px solid #f3f3f3";
+        loader.style.borderTop = "16px solid #3498db";
+        loader.style.borderRadius = "50%";
+        loader.style.width = "120px";
+        loader.style.height = "120px";
+        loader.style.animation = "spin 2s linear infinite";
+
+        // Append the loader to the container
+        loaderContainer.appendChild(loader);
+
+        // Append the container to the document body
+        document.body.appendChild(loaderContainer);
+
+        // Hide the loader after 10 seconds
+        //   setTimeout(function() {
+        //     loaderContainer.style.display = "none";
+        //   }, 5000);
+    };
+
+</script>
+</body>
+</html>
