@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .list-element {
+            margin: 10px;
+            font-size: 23px;
+            font-family: 'Times New Roman', Times, serif;
+            text-decoration: double;
+        }
+
+        #btn {
+            width: 80px;
+            height: 40px;
+            border: 1px solid black;
+            border-radius: 15px;
+            background-color: black;
+            color: white;
+
+        }
+
+        #btn:hover {
+            background-color: white;
+            color: black;
+            ;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 style="text-align: center;">Showing List of Fruits</h1>
+    <h3 style="text-align: center;">Here is example where we are fetching the sorted fruits data from the backend </h3>
+
+
+    <h4>Original Array of Object</h4>
+    <ol id="fruits-list"></ol>
+    <script>
+        // Sample data for fruits
+        const fruits = [
+            { id: 1, name: 'Apple', color: 'Red' },
+            { id: 2, name: 'Banana', color: 'Yellow' },
+            { id: 3, name: 'Orange', color: 'Orange' },
+            { id: 4, name: 'Grapes', color: 'Green' },
+            { id: 5, name: 'Strawberry', color: 'Red' },
+            { id: 6, name: 'Blueberry', color: 'Blue' },
+            { id: 7, name: 'Pineapple', color: 'Yellow' },
+            { id: 8, name: 'Watermelon', color: 'Green' },
+            { id: 9, name: 'Mango', color: 'Yellow' },
+            { id: 10, name: 'Kiwi', color: 'Brown' },
+        ];
+
+        // Get the <ol> element to display fruits
+        const fruitsList = document.getElementById('fruits-list');
+
+        // Loop through the fruits data and create <li> elements
+        fruits.forEach(fruit => {
+            const li = document.createElement('li');
+            li.setAttribute('class','list-element');
+            li.textContent = `ID: ${fruit.id}, Name: ${fruit.name}, Color: ${fruit.color}`;
+            fruitsList.appendChild(li);
+        });
+    </script>
+    <p>Click on the below button to fetch the Sorted Array</p>
+    <button id="btn" onclick="fetchData(event)">Sort</button>
+    <div id="parentDiv"></div>
+    <script>
+        async function fetchData(event) {
+            loader(event);
+            await fetch('http://localhost:3001/fruits').then((res) => {
+                return res.json();
+            }).then((data) => {
+                console.log(data);
+                displayData(data);
+            }).catch((err) => {
+                console.log(err);
+            }).finally(() => {
+                loaderContainer.style.display = "none";
+            })
+        }
+        function displayData(data) {
+            const parentDiv = document.getElementById('parentDiv');
+            const ol = document.createElement('ol');
+
+
+            for (let i = 0; i < data.length; i++) {
+                const obj = data[i];
+                const li = document.createElement("li");
+
+                li.setAttribute('class', 'list-element');
+
+                li.innerText = "ID : " + obj.id + " ,Name:" + obj.name + " ,Color:" + obj.color;
+
+                ol.appendChild(li);
+
+
+            }
+            parentDiv.appendChild(ol);
+        }
+    </script>
+
+
+    <script>
+        // Wait for the page to load
+        var loaderContainer = null;
+        function loader(event) {
+            // Create the loader container element
+            loaderContainer = document.createElement("div");
+            loaderContainer.setAttribute("id", "loader-container");
+            loaderContainer.style.position = "fixed";
+            loaderContainer.style.top = "0";
+            loaderContainer.style.left = "0";
+            loaderContainer.style.width = "100%";
+            loaderContainer.style.height = "100%";
+            loaderContainer.style.display = "flex";
+            loaderContainer.style.alignItems = "center";
+            loaderContainer.style.justifyContent = "center";
+            loaderContainer.style.zIndex = "9999";
+            loaderContainer.style.backdropFilter = "blur(8px)";
+            loaderContainer.style.webkitBackdropFilter = "blur(8px)";
+
+            // Create the loader element
+            var loader = document.createElement("div");
+            loader.setAttribute("id", "loader");
+            loader.style.border = "16px solid #f3f3f3";
+            loader.style.borderTop = "16px solid #3498db";
+            loader.style.borderRadius = "50%";
+            loader.style.width = "120px";
+            loader.style.height = "120px";
+            loader.style.animation = "spin 2s linear infinite";
+
+            // Append the loader to the container
+            loaderContainer.appendChild(loader);
+
+            // Append the container to the document body
+            document.body.appendChild(loaderContainer);
+
+            // Hide the loader after 10 seconds
+            //   setTimeout(function() {
+            //     loaderContainer.style.display = "none";
+            //   }, 5000);
+        };
+
+    </script>
+</body>
+
+</html>

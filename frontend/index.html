@@ -25,6 +25,8 @@
           <button class="submit-button" onclick="sendData(event)" id="submit-button">Submit</button>
         </form>
       </div>
+
+      <h3 id="redirect" onclick="redirect()">Click here for Task 2!</h3>
   <script>
     async function sendData(event){
         event.preventDefault();
@@ -51,6 +53,7 @@
         }).then((res)=>{
             return res.json()
         }).then((data)=>{
+            console
             errorMessage.textContent = data.message;
           errorMessage.style.opacity = 1;
           submitButton.disabled = false;
@@ -70,6 +73,9 @@
         
        
         
+    }
+    function redirect(){
+        window.location.href = "list.html"
     }
   </script>
   <script>
